@@ -1,0 +1,56 @@
+name: Build SRS from FrayZV dat files
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4,10,16,22 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set variables
+        run: |
+          echo "TAG_NAME=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+          echo "RELEASE_NAME=Released on $(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+          # URL файлов от FrayZV (из их GitHub Releases)
+          echo "GEOIP_URL=https://github.com/frayZV/simple-ru-geoip/releases/latest/download/geoip.dat" >> $GITHUB_ENV
+          echo "GEOSITE_URL=https://github.com/frayZV/simple-ru-geosite/releases/latest/download/geosite.dat" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Checkout geodat2srs
+        uses: actions/checkout@v4
+        with:
+          repository: runetfreedom/geodat2srs
+          path: geodat2srs
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ./geodat2srs/go.mod
+
+      - name: Download dat files
+        run: |
+          mkdir -p ./tmp/dat
+          curl -sSL "$GEOIP_URL"   > ./tmp/dat/geoip.dat
+          curl -sSL "$GEOSITE_URL" > ./tmp/dat/geosite.dat
+
+      - name: Build geodat2srs
+        run: go build -C geodat2srs ./
+
+      - name: Convert to SRS
+        run: |
+          ./geodat2srs/geodat2srs geoip   -i ./tmp/dat/geoip.dat   -o ./publish/rule-set-geoip/
+          ./geodat2srs/geodat2srs geosite -i ./tmp/dat/geosite.dat -o ./publish/rule-set-geosite/
+
+      - name: Push to release branch
+        run: |
+          cd publish || exit 1
+          git init
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b release
+          git add .
+          git commit -m "${{ env.RELEASE_NAME }}"
+          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git push -f -u origin release
