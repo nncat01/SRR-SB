@@ -1,3 +1,5 @@
+**English** | [**Русский**](https://github.com/nncat01/SRR-SB/blob/main/README.md)
+
 # SRR-SB
 
 Automated generation of sing-box RULE-SET (.srs) files
