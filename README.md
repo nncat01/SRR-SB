@@ -1,3 +1,5 @@
+[**English**](https://github.com/nncat01/SRR-SB/blob/main/README.en.md) | **Русский**
+
 # SRR-SB
 
 Автоматическая генерация RULE-SET файлов `srs` для sign-box
