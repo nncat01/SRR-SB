@@ -3,7 +3,7 @@ name: Build SRS from FrayZV dat files
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 4,10,16,22 * * *"
+    - cron: "0 23 * * *"
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
