@@ -4,6 +4,6 @@
 
 Автоматическая генерация RULE-SET файлов `srs` для sign-box
 
-В качестве исходных файлов используюься V2Ray `dat` файлы из репозитория frayZV/simple-ru-routing
+В качестве исходных файлов используются Xray `dat` файлы из репозитория [frayZV/simple-ru-routing](https://github.com/frayZV/simple-ru-routing)
 
-Сделано на основе конвертера от runetfreedom/geodat2srs
+Сделано на основе конвертера от [runetfreedom/geodat2srs](https://github.com/runetfreedom/geodat2srs)
